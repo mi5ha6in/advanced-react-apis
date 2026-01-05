@@ -1,17 +1,32 @@
-import { useReducer, useState } from 'react'
+import { act, useReducer, useState } from 'react'
 import * as ReactDOM from 'react-dom/client'
 
-// 🐨 rename the "state" variable "count" and the "newState" should be "change"
-// 🐨 then the function should return the sum of "count" and "change"
-const countReducer = (count: number, change: number) => count + change
+// 🦺 make a type called "State" which is an object with a count property as a number
+// 🦺 make a type called "Action" which is the same as the State type
+// 🐨 update this function to accept "state" (type "State") and an
+// "action" (type "Action")
+// 🐨 the function should merge properties from the state and the action and
+// return that new object
+type State = {
+	count: number
+}
+
+type Action = {
+	count: number
+}
+
+const countReducer = (state: State, action: Action) => {
+	return { ...state, ...action }
+}
 
 function Counter({ initialCount = 0, step = 1 }) {
-	// 🐨 change the dispatch function "setCount" to "changeCount" here
-	const [count, changeCount] = useReducer(countReducer, initialCount)
-	// 🐨 update these to simply pass the change we want to make to the state rather
-	// than the new state itself.
-	const increment = () => changeCount(step)
-	const decrement = () => changeCount(-step)
+	// 🐨 change this to "state" and "setState" and update the second argument
+	// to be an object with a count property.
+	const [state, setState] = useReducer(countReducer, { count: initialCount })
+	// 🐨 update these calls to call setState with an object and a count property
+	const { count } = state
+	const increment = () => setState({ count: count + step })
+	const decrement = () => setState({ count: count - step })
 	return (
 		<div className="counter">
 			<output>{count}</output>
