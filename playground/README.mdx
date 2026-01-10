@@ -1,37 +1,19 @@
-# State Object
+# Action Function
 
-<EpicVideo url="https://www.epicreact.dev/workshops/advanced-react-apis/state-object" />
+<EpicVideo url="https://www.epicreact.dev/workshops/advanced-react-apis/action-function" />
 
-👨‍💼 Back in the day, we had `this.setState` from class components? We're going to
-make the state updater (`dispatch` function) behave in a similar way by changing
-our `state` to an object (`{count: 0}`) and then calling the state updater with
-an object which merges with the current state.
-
-So here's how I want things to look now:
+👨‍💼 `this.setState` from class components can also accept a function. So let's
+add support for that with our simulated `setState` function. See if you can
+figure out how to make your reducer support both the object as in the last step
+as well as a function callback:
 
 ```tsx
 const [state, setState] = useReducer(countReducer, {
 	count: initialCount,
 })
 const { count } = state
-const increment = () => setState({ count: count + step })
-const decrement = () => setState({ count: count - step })
+const increment = () =>
+	setState((currentState) => ({ count: currentState.count + step }))
+const decrement = () =>
+	setState((currentState) => ({ count: currentState.count - step }))
 ```
-
-How would you need to change the reducer to make this work?
-
-How would you make it support multiple state properties? For example:
-
-```tsx
-const [state, setState] = useReducer(countReducer, {
-	count: initialCount,
-	someOtherState: 'hello',
-})
-const { count } = state
-const increment = () => setState({ count: count + step })
-const decrement = () => setState({ count: count - step })
-```
-
-Calling `increment` or `decrement` in this case should only update the `count`
-property and leave the `someOtherState` property alone. So the `setState`
-function should merge the new state with the old state.

@@ -1,32 +1,30 @@
-import { act, useReducer, useState } from 'react'
+import { useReducer, useState } from 'react'
 import * as ReactDOM from 'react-dom/client'
 
-// 🦺 make a type called "State" which is an object with a count property as a number
-// 🦺 make a type called "Action" which is the same as the State type
-// 🐨 update this function to accept "state" (type "State") and an
-// "action" (type "Action")
-// 🐨 the function should merge properties from the state and the action and
-// return that new object
-type State = {
-	count: number
-}
-
-type Action = {
-	count: number
-}
-
-const countReducer = (state: State, action: Action) => {
-	return { ...state, ...action }
-}
+type State = { count: number }
+type Action = Partial<State> | ((state: State) => Partial<State>)
+const countReducer = (state: State, action: Action) => ({
+	...state,
+	// 🐨 if the action is a function, then call it with the state and spread the results,
+	// otherwise, just spread the results (as it is now).
+	...(typeof action === 'function' ? action(state) : state),
+})
 
 function Counter({ initialCount = 0, step = 1 }) {
-	// 🐨 change this to "state" and "setState" and update the second argument
-	// to be an object with a count property.
-	const [state, setState] = useReducer(countReducer, { count: initialCount })
-	// 🐨 update these calls to call setState with an object and a count property
+	const [state, setState] = useReducer(countReducer, {
+		count: initialCount,
+	})
 	const { count } = state
-	const increment = () => setState({ count: count + step })
-	const decrement = () => setState({ count: count - step })
+	// 🐨 update these calls to use the callback form. Use the currentState given
+	// to you by the callback form of setState when calculating the new state.
+	const increment = () =>
+		setState((currentState) => ({
+			count: currentState.count + step,
+		}))
+	const decrement = () =>
+		setState((currentState) => ({
+			count: currentState.count - step,
+		}))
 	return (
 		<div className="counter">
 			<output>{count}</output>
