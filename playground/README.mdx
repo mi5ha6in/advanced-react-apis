@@ -1,19 +1,22 @@
-# Action Function
+# Traditional Reducer
 
-<EpicVideo url="https://www.epicreact.dev/workshops/advanced-react-apis/action-function" />
+<EpicVideo url="https://www.epicreact.dev/workshops/advanced-react-apis/traditional-reducer" />
 
-👨‍💼 `this.setState` from class components can also accept a function. So let's
-add support for that with our simulated `setState` function. See if you can
-figure out how to make your reducer support both the object as in the last step
-as well as a function callback:
+👨‍💼 Now it's time to get to the actual convention for reducers in React apps.
+
+Update your reducer so I can do this:
 
 ```tsx
-const [state, setState] = useReducer(countReducer, {
+const [state, dispatch] = useReducer(countReducer, {
 	count: initialCount,
 })
 const { count } = state
-const increment = () =>
-	setState((currentState) => ({ count: currentState.count + step }))
-const decrement = () =>
-	setState((currentState) => ({ count: currentState.count - step }))
+const increment = () => dispatch({ type: 'INCREMENT', step })
+const decrement = () => dispatch({ type: 'DECREMENT', step })
 ```
+
+The key here is that the logic for updating the state is now in the reducer, and
+the component is just dispatching actions. This actually gives us a bit of a
+declarative API for updating state, which is nice. The component is just saying
+what it wants to happen, and the reducer is the one that decides how to make it
+happen.
